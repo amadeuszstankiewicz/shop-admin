@@ -1,3 +1,29 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    font-family: Proxima Nova, system-ui, sans-serif;
+  }
+}
+
+input, textarea {
+  @apply border-2 border-slate-200 rounded p-1 max-w-[460px] w-full mb-2
+}
+
+input:focus, input:focus-visible, textarea:focus, textarea:focus-visible {
+  @apply outline-0
+}
+
+label {
+  @apply text-slate-600
+}
+
+h1 {
+  @apply text-black font-bold text-xl mb-4
+}
+
+.btn-primary {
+  @apply py-2 px-4 bg-blue-500 rounded transition-all hover:bg-blue-400 font-bold text-white w-fit
+}
