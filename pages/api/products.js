@@ -1,6 +1,5 @@
 import { Product } from "@/models/Product";
 import { mongooseConnect } from "@/lib/mongoose";
-import mongoose from "mongoose";
 
 export default async function handler(req, res) {
     const { method } = req;
@@ -10,30 +9,36 @@ export default async function handler(req, res) {
     if(method === "GET") {
         let products;
         if(req.query?.id) {
-            products = await Product.findOne({_id: req.query.id})
+            products = await Product.findOne({_id: req.query.id}).populate('category')
         } else {
-            products = await Product.find()
+            products = await Product.find().populate('category')
         }
         res.json(products)
     }
 
     if(method === "PUT") {
-        const { id, title, description, price } = req.body;
-        
+        const { id, title, description, price, category } = req.body;
+
+        let finalCategory = null
+        if(category !== '') {
+            finalCategory = category;
+        }
         await Product.updateOne({_id: id}, {
             title,
             description,
-            price
+            price,
+            category: finalCategory
         })
         res.json({status: "success"})
     }
 
     if(method === "POST") {
-        const { title, description, price } = req.body;
+        const { title, description, price, category } = req.body;
         const newProduct = await Product.create({
             title,
             description,
-            price
+            price,
+            category
         })
 
         newProduct.save()

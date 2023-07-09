@@ -1,13 +1,21 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import { useRouter } from "next/router";
 
 export default function ProductForm(currentProduct) {
     const [title, setTitle] = useState(currentProduct.title || '');
+    const [category, setCategory] = useState(currentProduct.category || '');
     const [description, setDescription] = useState(currentProduct.description || '');
     const [price, setPrice] = useState(currentProduct.price || '');
 
     const [goBack, setGoBack] = useState(false);
+
+    const [categories, setCategories] = useState([]);
+    useEffect(() => {
+        axios.get(`/api/categories`).then(res => {
+            setCategories(res.data)
+        })
+    }, [])
 
     const router = useRouter();
 
@@ -19,13 +27,15 @@ export default function ProductForm(currentProduct) {
                 id: currentProduct._id,
                 title,
                 description,
-                price
+                price,
+                category
             })
         } else {
             await axios.post('/api/products', {
                 title,
                 description,
-                price
+                price,
+                category
             })
         }
         setGoBack(true)
@@ -54,6 +64,18 @@ export default function ProductForm(currentProduct) {
                 value={title}
                 onChange={e => setTitle(e.target.value)}
                 />
+
+            <label>Category</label>
+            <select
+                name="country"
+                onChange={e => setCategory(e.target.value)}
+                value={category._id}
+                >
+                <option value="">Choose a category</option>
+                {categories.map(category => (
+                    <option key={category._id} value={category._id}>{category.name}</option>
+                ))}
+            </select>
 
             <label>Description</label>
             <textarea 

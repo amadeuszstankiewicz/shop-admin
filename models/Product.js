@@ -9,6 +9,10 @@ const ProductSchema = new Schema({
     price: {
         type: Number,
         required: true
+    },
+    category: {
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     }
 });
 
