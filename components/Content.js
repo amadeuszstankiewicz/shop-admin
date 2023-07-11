@@ -6,7 +6,7 @@ export default function Content({children}) {
     if(session === undefined) {
         return;
     }
-
+    
     if(!session) {
         return (
             <div className="flex items-center w-screen min-h-screen bg-gradient-to-r from-blue-500 from-10% via-sky-500 via-30% to-cyan-500 to-90%">
@@ -24,7 +24,7 @@ export default function Content({children}) {
     }
 
     return (
-        <div className="min-h-screen flex bg-gradient-to-r from-blue-500 from-10% via-sky-500 via-30% to-cyan-500 to-90%">
+        <div className="min-h-screen flex bg-gradient-to-r from-blue-500 from-10% via-sky-500 via-30% to-cyan-500 to-90% flex-wrap md:flex-nowrap">
             <Nav />
             <div className="min-h-[540px] h-fit flex-grow m-2 mb-8 p-4 bg-white/60 rounded-md border-white/30 border-4">
                 {children}

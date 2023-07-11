@@ -1,9 +1,25 @@
 import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
+import { getSession } from 'next-auth/react';
 
 export default async function handler(req, res) {
-    const { method } = req;
+    const session = await getSession({ req });
+    if (!session) {
+        // User is not logged in
+        res.status(401).json({ error: 'You are not authenticated' });
+        return;
+    }
 
+    if (session.user?.email !== process.env.ADMIN_EMAIL) {
+        // User is logged in, but not with the specific admin email
+        res.setHeader('Set-Cookie', [
+            `next-auth.session-token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+            `next-auth.csrf-token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+        ]);
+        res.status(403).json({ error: 'You are not authorized' });
+    }
+
+    const { method } = req;
     await mongooseConnect();
 
     if(method === "GET") {
