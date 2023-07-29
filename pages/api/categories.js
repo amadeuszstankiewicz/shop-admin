@@ -1,22 +1,22 @@
 import { Category } from "@/models/Category";
 import { mongooseConnect } from "@/lib/mongoose";
-import { getSession } from 'next-auth/react';
+import { authOptions } from "./auth/[...nextauth]";
+import { getServerSession } from "next-auth";
 
 export default async function handler(req, res) {
-    const session = await getSession({ req });
-    if (!session) {
-        // User is not logged in
-        res.status(401).json({ error: 'You are not authenticated' });
-        return;
-    }
-
-    if (session.user?.email !== process.env.ADMIN_EMAIL) {
-        // User is logged in, but not with the specific admin email
-        res.setHeader('Set-Cookie', [
-            `next-auth.session-token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
-            `next-auth.csrf-token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
-        ]);
-        res.status(403).json({ error: 'You are not authorized' });
+    const session = await getServerSession(req, res, authOptions)
+    if (session) {
+        // Signed in
+        if(session.user?.email !== process.env.ADMIN_EMAIL) {
+            res.setHeader('Set-Cookie', [
+                `next-auth.session-token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`,
+                `next-auth.csrf-token=deleted; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+            ]);
+            res.status(403).json({ error: 'You are not authorized' });
+        }
+    } else {
+        // Not Signed in
+        res.status(403).json({ error: 'You are not authenticated' });
     }
 
     const { method } = req;

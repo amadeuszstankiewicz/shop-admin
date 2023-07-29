@@ -1,7 +1,7 @@
-import { Product } from "@/models/Product";
 import { mongooseConnect } from "@/lib/mongoose";
 import { getServerSession } from "next-auth";
 import { authOptions } from "./auth/[...nextauth]";
+import { Order } from "@/models/Order";
 
 export default async function handler(req, res) {
     const session = await getServerSession(req, res, authOptions)
@@ -23,15 +23,16 @@ export default async function handler(req, res) {
     await mongooseConnect();
 
     if(method === "GET") {
-        let products;
-        if(req.query?.id) {
-            products = await Product.findOne({_id: req.query.id}).populate('category')
-        } else {
-            products = await Product.find().populate('category')
-        }
-        res.json(products)
+        let orders;
+        //if(req.query?.id) {
+        //    products = await Product.findOne({_id: req.query.id}).populate('category')
+        //} else {
+            orders = await Order.find().sort({createdAt:-1})
+        //}
+        res.json(orders)
     }
 
+    /*
     if(method === "PUT") {
         const { id, title, description, price, category, images } = req.body;
 
@@ -71,5 +72,6 @@ export default async function handler(req, res) {
             res.json({status: "fail"})
         }
     }
+    */
 }
   
