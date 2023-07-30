@@ -31,3 +31,23 @@ h1 {
 .btn-primary {
   @apply py-2 px-4 bg-blue-500 rounded transition-all hover:bg-blue-400 font-bold text-white w-fit
 }
+
+.label-status-pending {
+  @apply bg-yellow-500
+}
+
+.label-status-paid {
+  @apply bg-green-500
+}
+
+.label-status-completed {
+  @apply bg-blue-500
+}
+
+.label-status-failed {
+  @apply bg-red-500
+}
+
+.label-status-refunded {
+  @apply bg-slate-500
+}
