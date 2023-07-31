@@ -174,6 +174,7 @@ export default function ProductForm(currentProduct) {
                 placeholder="Description"
                 value={description}
                 onChange={e => setDescription(e.target.value)}
+                rows={8}
                 ></textarea>
 
             <label>Price</label>
